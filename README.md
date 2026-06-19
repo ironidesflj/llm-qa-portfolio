@@ -43,7 +43,7 @@ llm-qa-portfolio/
 
 ---
 
-## 🚀 Quick Start
+## 🚀 Início Rápido
 
 ```bash
 # Clone o projeto
@@ -68,26 +68,26 @@ make app
 make test
 ```
 
-### CI notes
+### Notas sobre CI
 
-- **CI Jobs**: The CI runs multiple workflows: `ci.yml` (main pipeline) and `api-tests.yml` (dedicated API tests).
-- **Demo App**: The API and UI tests run against the `demo_app` FastAPI application included in the repo root.
-- **Docker Build**: The `demo_app/Dockerfile` is built with the repo root as the Docker build context:
-  - Locally: `docker build -t llm-qa-portfolio-demo:latest -f demo_app/Dockerfile .`
-  - In CI: the workflow builds with `-f demo_app/Dockerfile .` to access `requirements.txt` at repo root.
-- **Playwright**: The UI automation job installs required system libraries on Ubuntu before installing Playwright browsers to avoid `--with-deps` package conflicts.
-- **LLM Evaluation**: LLM tests are skipped by default unless `OPENAI_API_KEY` is set as a repository secret in GitHub Actions.
+- **Jobs de CI**: O pipeline executa múltiplos workflows: `ci.yml` (pipeline principal) e `api-tests.yml` (testes de API dedicados).
+- **Demo App**: Os testes de API e UI rodam contra a aplicação FastAPI `demo_app` incluída na raiz do repositório.
+- **Build Docker**: O `demo_app/Dockerfile` é construído com a raiz do repositório como contexto de build do Docker:
+  - Localmente: `docker build -t llm-qa-portfolio-demo:latest -f demo_app/Dockerfile .`
+  - Em CI: o workflow constrói com `-f demo_app/Dockerfile .` para acessar `requirements.txt` na raiz.
+- **Playwright**: O job de automação UI instala bibliotecas de sistema requeridas no Ubuntu antes de instalar browsers do Playwright para evitar conflitos com `--with-deps`.
+- **Avaliação de LLM**: Testes de LLM são pulados por padrão a menos que `OPENAI_API_KEY` seja configurada como um segredo do repositório no GitHub Actions.
 
-#### Running demo app locally:
+#### Rodando a demo app localmente:
 ```bash
-# Using Make
+# Usando Make
 make app
 
-# Or manually
+# Ou manualmente
 python -m uvicorn demo_app.main:app --host 127.0.0.1 --port 3000
 ```
 
-#### Building Docker image locally:
+#### Construindo imagem Docker localmente:
 ```bash
 docker build -t llm-qa-portfolio-demo:latest -f demo_app/Dockerfile .
 docker run -d -p 3000:3000 llm-qa-portfolio-demo:latest
@@ -107,7 +107,7 @@ make test-llm      # avaliação LLM real, requer OPENAI_API_KEY
 ## 📬 Contato
 
 - LinkedIn: https://www.linkedin.com/in/ironjunior
-- E-mail: ironidesflj@gmail.com
+- Email: ironidesflj@gmail.com
 
 ---
 
@@ -132,7 +132,7 @@ make test-llm      # avaliação LLM real, requer OPENAI_API_KEY
 
 ---
 
-## 🧠 Módulo LLM Tests — Destaque do Portfólio
+## 🧠 Módulo LLM Tests — Destaque do Portfólio (Testes de Modelos de Linguagem)
 
 O módulo `llm-tests/` testa modelos de linguagem para:
 
@@ -169,4 +169,4 @@ Total                50
 
 ## 📄 Licença
 
-MIT — fique à vontade para usar como base do seu próprio portfólio.
+MIT — fique à vontade para usar como base do seu próprio portfólio. Boa sorte na sua jornada como QA!
