@@ -31,7 +31,12 @@ jobs:
 
       - name: Build demo Docker image
         run: |
-          docker build -t llm-qa-portfolio-demo:latest ./demo_app
+          echo "Diagnostics: repository root and demo_app contents"
+          ls -la
+          ls -la demo_app
+          echo "Dockerfile (first 40 lines):"
+          sed -n '1,40p' demo_app/Dockerfile || true
+          docker build -t llm-qa-portfolio-demo:latest -f demo_app/Dockerfile .
 
       - name: Run demo container
         run: |
