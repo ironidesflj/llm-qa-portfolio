@@ -1,7 +1,7 @@
-# QA Portfolio - Automacao, Dados & IA
+# Ironides Junior - Portfolio QA, AI/ML QA & LLM Testing
 
-> Projeto de portfólio demonstrando testes em sistemas web, APIs REST, pipelines de dados e modelos de linguagem (LLMs).  
-> Cobre desde QA clássico até **AI Quality Engineering** — posição de alta demanda no mercado internacional.
+> Portfólio pessoal de testes para web, APIs REST, pipelines de dados e modelos de linguagem (LLMs).  
+> Parte do meu roadmap para me tornar **AI/ML QA, LLM Testing e AI Quality Engineer**.
 
 ---
 
@@ -44,7 +44,7 @@ llm-qa-portfolio/
 
 ```bash
 # Clone o projeto
-git clone https://github.com/seu-usuario/llm-qa-portfolio.git
+git clone https://github.com/ironidesjunior/llm-qa-portfolio.git
 cd llm-qa-portfolio
 
 # Crie o ambiente virtual
@@ -61,6 +61,13 @@ playwright install chromium
 # Execute todos os testes
 pytest --html=report.html --self-contained-html
 ```
+
+---
+
+## 📬 Contato
+
+- LinkedIn: https://www.linkedin.com/in/ironjunior
+- E-mail: ironidesflj@gmail.com
 
 ---
 
