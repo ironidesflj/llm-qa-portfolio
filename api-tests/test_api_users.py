@@ -5,6 +5,9 @@ Testa os endpoints de criação, leitura e deleção de usuários.
 
 import pytest
 import requests
+from uuid import uuid4
+
+pytestmark = pytest.mark.api
 
 BASE_URL = "http://localhost:3000/api"
 
@@ -27,9 +30,10 @@ def headers(auth_token):
 
 @pytest.fixture
 def novo_usuario():
+    unique_id = uuid4().hex[:8]
     return {
         "name": "Iron QA",
-        "email": "iron.qa@teste.com",
+        "email": f"iron.qa.{unique_id}@teste.com",
         "role": "viewer"
     }
 
