@@ -70,12 +70,28 @@ make test
 
 ### CI notes
 
-- The CI runs multiple jobs: API, UI (Playwright), Data Quality and LLM evaluation. The API and UI tests run against the `demo_app` included in this repo.
-- For reproducibility the repository includes a `demo_app/Dockerfile` and a workflow that can build and run the app in CI before executing tests.
-- The Playwright job installs required system libraries on Ubuntu runners before installing the browser to avoid `--with-deps` package conflicts.
-- LLM evaluation tests are skipped by default unless `OPENAI_API_KEY` is provided as a repository secret in GitHub Actions.
+- **CI Jobs**: The CI runs multiple workflows: `ci.yml` (main pipeline) and `api-tests.yml` (dedicated API tests).
+- **Demo App**: The API and UI tests run against the `demo_app` FastAPI application included in the repo root.
+- **Docker Build**: The `demo_app/Dockerfile` is built with the repo root as the Docker build context:
+  - Locally: `docker build -t llm-qa-portfolio-demo:latest -f demo_app/Dockerfile .`
+  - In CI: the workflow builds with `-f demo_app/Dockerfile .` to access `requirements.txt` at repo root.
+- **Playwright**: The UI automation job installs required system libraries on Ubuntu before installing Playwright browsers to avoid `--with-deps` package conflicts.
+- **LLM Evaluation**: LLM tests are skipped by default unless `OPENAI_API_KEY` is set as a repository secret in GitHub Actions.
 
-If you'd like me to open a PR with these changes and CI fixes, I can create the branch and open the PR automatically.
+#### Running demo app locally:
+```bash
+# Using Make
+make app
+
+# Or manually
+python -m uvicorn demo_app.main:app --host 127.0.0.1 --port 3000
+```
+
+#### Building Docker image locally:
+```bash
+docker build -t llm-qa-portfolio-demo:latest -f demo_app/Dockerfile .
+docker run -d -p 3000:3000 llm-qa-portfolio-demo:latest
+```
 
 ### Comandos úteis
 
