@@ -17,7 +17,15 @@ import json
 import pytest
 from openai import OpenAI
 
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+pytestmark = [
+    pytest.mark.llm,
+    pytest.mark.requires_openai,
+    pytest.mark.skipif(
+        not os.getenv("OPENAI_API_KEY"),
+        reason="OPENAI_API_KEY is required for live LLM evaluation.",
+    ),
+]
+
 MODEL = "gpt-4o-mini"  # troque por qualquer modelo que queira avaliar
 
 
@@ -25,8 +33,25 @@ MODEL = "gpt-4o-mini"  # troque por qualquer modelo que queira avaliar
 # Utilitário central
 # ─────────────────────────────────────────
 
+_LLM_CLIENT = None
+
+
+@pytest.fixture(scope="session", autouse=True)
+def llm_client_fixture():
+    """Session-scoped fixture to initialize the OpenAI client once during test runtime.
+
+    Using an autouse fixture defers initialization until pytest config is ready,
+    avoiding module-level or collection-time issues.
+    """
+    global _LLM_CLIENT
+    _LLM_CLIENT = OpenAI(api_key=os.getenv("OPENAI_API_KEY"), timeout=60.0)
+    return _LLM_CLIENT
+
+
 def ask_llm(prompt: str, system: str = "Você é um assistente útil e preciso.") -> str:
     """Envia prompt para o LLM e retorna a resposta como string."""
+    # Prefer the session-scoped client initialized by the fixture when available.
+    client = _LLM_CLIENT or OpenAI(api_key=os.getenv("OPENAI_API_KEY"), timeout=60.0)
     response = client.chat.completions.create(
         model=MODEL,
         messages=[

@@ -1,0 +1,28 @@
+INFO:     Started server process [69026]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:3000 (Press CTRL+C to quit)
+INFO:     127.0.0.1:62594 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62597 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62599 - "GET /api/users HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62601 - "GET /api/users HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62603 - "GET /api/users HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:62605 - "GET /api/users HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:62607 - "POST /api/users HTTP/1.1" 201 Created
+INFO:     127.0.0.1:62609 - "DELETE /api/users/3 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:62611 - "POST /api/users HTTP/1.1" 201 Created
+INFO:     127.0.0.1:62613 - "POST /api/users HTTP/1.1" 409 Conflict
+INFO:     127.0.0.1:62615 - "DELETE /api/users/4 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:62617 - "POST /api/users HTTP/1.1" 422 Unprocessable Entity
+INFO:     127.0.0.1:62619 - "POST /api/users HTTP/1.1" 422 Unprocessable Entity
+INFO:     127.0.0.1:62621 - "POST /api/users HTTP/1.1" 201 Created
+INFO:     127.0.0.1:62623 - "DELETE /api/users/5 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:62625 - "POST /api/users HTTP/1.1" 201 Created
+INFO:     127.0.0.1:62627 - "DELETE /api/users/6 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:62629 - "DELETE /api/users/999999 HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:62631 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62633 - "DELETE /api/users/1 HTTP/1.1" 403 Forbidden
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [69026]

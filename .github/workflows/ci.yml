@@ -21,8 +21,27 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
+      - name: Start demo app
+        run: |
+          uvicorn demo_app.main:app --host 127.0.0.1 --port 3000 &
+          python - <<'PY'
+          import time
+          import urllib.request
+
+          for _ in range(20):
+              try:
+                  urllib.request.urlopen("http://127.0.0.1:3000/health", timeout=1)
+                  break
+              except Exception:
+                  time.sleep(1)
+          else:
+              raise SystemExit("Demo app did not become healthy in time")
+          PY
+
       - name: Run API tests
-        run: pytest api-tests/ -v --html=reports/api-report.html --self-contained-html
+        run: |
+          mkdir -p reports
+          pytest api-tests/ -v --html=reports/api-report.html --self-contained-html
 
       - name: Upload report
         uses: actions/upload-artifact@v4
@@ -45,11 +64,49 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
+      - name: Install system dependencies for Playwright
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libatk1.0-0 \
+            libatk-bridge2.0-0 \
+            libcups2 \
+            libxkbcommon0 \
+            libxdamage1 \
+            libpango-1.0-0 \
+            libpangocairo-1.0-0 \
+            libgdk-pixbuf-2.0-0 \
+            libglib2.0-0 \
+            libxcomposite1 \
+            libxfixes3 \
+            libxrandr2 \
+            libgtk-3-0 \
+            libwayland-client0
+
       - name: Install Playwright browsers
-        run: playwright install chromium --with-deps
+        run: playwright install chromium
+
+      - name: Start demo app
+        run: |
+          uvicorn demo_app.main:app --host 127.0.0.1 --port 3000 &
+          python - <<'PY'
+          import time
+          import urllib.request
+
+          for _ in range(20):
+              try:
+                  urllib.request.urlopen("http://127.0.0.1:3000/health", timeout=1)
+                  break
+              except Exception:
+                  time.sleep(1)
+          else:
+              raise SystemExit("Demo app did not become healthy in time")
+          PY
 
       - name: Run UI tests
-        run: pytest automation/ui/ -v --html=reports/ui-report.html --self-contained-html
+        run: |
+          mkdir -p reports
+          pytest automation/ui/ -v --html=reports/ui-report.html --self-contained-html
 
       - name: Upload report
         uses: actions/upload-artifact@v4
@@ -73,7 +130,9 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Run data quality tests
-        run: pytest data-quality/ -v --html=reports/data-quality-report.html --self-contained-html
+        run: |
+          mkdir -p reports
+          pytest data-quality/ -v --html=reports/data-quality-report.html --self-contained-html
 
       - name: Upload report
         uses: actions/upload-artifact@v4
@@ -101,7 +160,9 @@ jobs:
       - name: Run LLM evaluation tests
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-        run: pytest llm-tests/eval/ -v --html=reports/llm-report.html --self-contained-html
+        run: |
+          mkdir -p reports
+          pytest llm-tests/eval/ -v -m requires_openai --html=reports/llm-report.html --self-contained-html
 
       - name: Upload LLM report
         uses: actions/upload-artifact@v4

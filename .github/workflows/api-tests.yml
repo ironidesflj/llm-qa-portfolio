@@ -1,0 +1,64 @@
+name: API Tests
+
+on:
+  push:
+    paths:
+      - 'api-tests/**'
+      - 'demo_app/**'
+      - 'requirements.txt'
+  pull_request:
+    paths:
+      - 'api-tests/**'
+      - 'demo_app/**'
+      - 'requirements.txt'
+
+jobs:
+  test-api:
+    name: Run API tests against demo_app
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Build demo Docker image
+        run: |
+          docker build -t llm-qa-portfolio-demo:latest ./demo_app
+
+      - name: Run demo container
+        run: |
+          docker run -d --name demo_app -p 3000:3000 llm-qa-portfolio-demo:latest
+
+      - name: Wait for API to be ready
+        run: |
+          for i in {1..30}; do
+            if curl -fsS http://localhost:3000/health >/dev/null 2>&1; then
+              echo "API is ready"
+              exit 0
+            fi
+            echo "Waiting for API... ($i/30)"
+            sleep 2
+          done
+          docker logs demo_app || true
+          exit 1
+
+      - name: Run API tests
+        run: |
+          pytest api-tests/ -v --html=reports/api-report.html --self-contained-html
+        env:
+          CI: true
+
+      - name: Stop and remove demo container
+        if: always()
+        run: |
+          docker ps -a
+          docker stop demo_app || true
+          docker rm demo_app || true
