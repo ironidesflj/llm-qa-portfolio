@@ -1,0 +1,111 @@
+name: QA Pipeline
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test-api:
+    name: API Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run API tests
+        run: pytest api-tests/ -v --html=reports/api-report.html --self-contained-html
+
+      - name: Upload report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: api-test-report
+          path: reports/api-report.html
+
+  test-ui:
+    name: UI Automation (Playwright)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Install Playwright browsers
+        run: playwright install chromium --with-deps
+
+      - name: Run UI tests
+        run: pytest automation/ui/ -v --html=reports/ui-report.html --self-contained-html
+
+      - name: Upload report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ui-test-report
+          path: reports/ui-report.html
+
+  test-data-quality:
+    name: Data Quality Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run data quality tests
+        run: pytest data-quality/ -v --html=reports/data-quality-report.html --self-contained-html
+
+      - name: Upload report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: data-quality-report
+          path: reports/data-quality-report.html
+
+  test-llm:
+    name: LLM Evaluation
+    runs-on: ubuntu-latest
+    # Roda só quando há OPENAI_API_KEY configurada (evita custos em PRs de fork)
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run LLM evaluation tests
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: pytest llm-tests/eval/ -v --html=reports/llm-report.html --self-contained-html
+
+      - name: Upload LLM report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: llm-evaluation-report
+          path: reports/llm-report.html

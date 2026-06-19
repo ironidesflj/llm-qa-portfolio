@@ -1,0 +1,28 @@
+.DS_Store
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Test and automation artifacts
+reports/
+report.html
+playwright-report/
+test-results/
+
+# IDE/editor
+.idea/
+.vscode/
